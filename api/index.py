@@ -1,7 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from mangum import Mangum
 import json
 import statistics
 import math
@@ -52,5 +51,3 @@ def compute_metrics(body: RequestBody):
         }
 
     return result
-
-handler = Mangum(app)
