@@ -8,11 +8,13 @@ import os
 
 app = FastAPI()
 
+# 🔥 Proper CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["POST"],
-    allow_headers=["*"],
+    allow_origins=["*"],          # Allow ALL origins
+    allow_credentials=False,     # IMPORTANT: must be False with "*"
+    allow_methods=["*"],         # Allow all methods (POST, OPTIONS, etc.)
+    allow_headers=["*"],         # Allow all headers
 )
 
 BASE_DIR = os.path.dirname(__file__)
