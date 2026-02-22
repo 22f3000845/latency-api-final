@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 import json
@@ -8,13 +8,13 @@ import os
 
 app = FastAPI()
 
-# 🔥 Proper CORS setup
+# Proper CORS setup
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],          # Allow ALL origins
-    allow_credentials=False,     # IMPORTANT: must be False with "*"
-    allow_methods=["*"],         # Allow all methods (POST, OPTIONS, etc.)
-    allow_headers=["*"],         # Allow all headers
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 BASE_DIR = os.path.dirname(__file__)
@@ -27,8 +27,21 @@ class RequestBody(BaseModel):
     regions: list[str]
     threshold_ms: float
 
+@app.options("/")
+def preflight():
+    return Response(
+        content="",
+        headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, OPTIONS",
+            "Access-Control-Allow-Headers": "*",
+        },
+    )
+
 @app.post("/")
-def compute_metrics(body: RequestBody):
+def compute_metrics(body: RequestBody, response: Response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+
     result = {}
 
     for region in body.regions:
